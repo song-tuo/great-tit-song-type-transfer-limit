@@ -1,0 +1,20 @@
+{
+  "bird_count": 107,
+  "bird_level_selection_count": 1284,
+  "expected_unique_selected_exact_tuple_count": 918,
+  "global_panel_count": 12,
+  "legal_exact_tuple_count_across_107_fixed_bird_years": 3166,
+  "legal_tuple_scope_note": "3166 is the sum of legal bird-level exact tuples across the 107 fixed bird-years; it is not a number of global panels.",
+  "per_bird_unique_selected_tuple_count": {
+    "max": 12,
+    "median": 11.0,
+    "min": 1,
+    "q1": 5.0,
+    "q3": 12.0
+  },
+  "reused_selection_count": 366,
+  "schema_version": "wytham-config-robustness-v6-posthoc-tuple-summary-v1",
+  "status": "PASS",
+  "unique_selected_exact_tuple_count": 918,
+  "unique_selected_exact_tuple_count_matches_918": true
+}
