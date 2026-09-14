@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+message: "If you use this material, please cite the paper and this repository."
+title: "Supplementary material for: Held-Out Song Types Reveal a Transfer Limit in Closed-Set Great Tit Identification Across Matched Configurations"
+authors:
+  - family-names: Dong
+    given-names: Song
+    affiliation: "Independent Researcher, Hong Kong SAR, China"
+repository-code: "https://github.com/song-tuo/great-tit-song-type-transfer-limit"
+type: dataset
+keywords:
+  - acoustic individual identification
+  - bioacoustic representations
+  - transfer evaluation
+  - great tit
+  - BirdNET and Perch
