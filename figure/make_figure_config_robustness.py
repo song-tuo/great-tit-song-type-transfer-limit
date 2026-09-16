@@ -28,8 +28,10 @@ OUT = HERE / "figure_config_robustness"
 
 MIN_PT = 9.0
 MM = 1 / 25.4
-PANEL_ORDER = [("birdnet", "linear"), ("perch", "linear"),
-               ("birdnet", "centroid"), ("perch", "centroid")]
+LINEAR_ONLY = True          # centroid now appears in the decoder table and Fig. 2
+PANEL_ORDER = ([("birdnet", "linear"), ("perch", "linear")] if LINEAR_ONLY else
+               [("birdnet", "linear"), ("perch", "linear"),
+                ("birdnet", "centroid"), ("perch", "centroid")])
 PIPELINE_LABEL = {"birdnet": "BirdNET", "perch": "Perch"}
 CONTRASTS = ("B_minus_A", "B_minus_C")
 CONTRAST_LABEL = {"B_minus_A": "B − A", "B_minus_C": "B − C"}
@@ -85,9 +87,11 @@ def draw(data):
         "svg.fonttype": "none",
         "svg.hashsalt": "icassp2027-fig1",
     })
-    W, H = 178 * MM, 77 * MM
-    fig, axes = plt.subplots(2, 2, figsize=(W, H), sharex=True, sharey=True)
-    fig.subplots_adjust(left=0.075, right=0.975, top=0.785, bottom=0.125, wspace=0.13, hspace=0.62)
+    W, H = 178 * MM, (44 if LINEAR_ONLY else 72) * MM
+    nrow = 1 if LINEAR_ONLY else 2
+    fig, axes = plt.subplots(nrow, 2, figsize=(W, H), sharex=True, sharey=True)
+    fig.subplots_adjust(left=0.075, right=0.975, top=(0.70 if LINEAR_ONLY else 0.775),
+                        bottom=(0.22 if LINEAR_ONLY else 0.13), wspace=0.13, hspace=0.62)
 
     offsets = np.linspace(-0.14, 0.14, 12)
     ypos = {"B_minus_A": 1.0, "B_minus_C": 0.0}
@@ -124,8 +128,10 @@ def draw(data):
     fig.canvas.draw()
     renderer = fig.canvas.get_renderer()
     inv = fig.transFigure.inverted()
-    for row, readout in enumerate(("linear", "centroid")):
-        boxes = [inv.transform_bbox(ax.get_tightbbox(renderer)) for ax in axes[row]]
+    rows_iter = (("linear",) if LINEAR_ONLY else ("linear", "centroid"))
+    for row, readout in enumerate(rows_iter):
+        rowaxes = axes if LINEAR_ONLY else axes[row]
+        boxes = [inv.transform_bbox(ax.get_tightbbox(renderer)) for ax in rowaxes]
         x0 = min(b.x0 for b in boxes) - 0.006
         x1 = max(b.x1 for b in boxes) + 0.006
         y0 = min(b.y0 for b in boxes) - 0.012
@@ -135,21 +141,24 @@ def draw(data):
             transform=fig.transFigure, fill=False, edgecolor=FRAME[readout],
             linewidth=1.0, linestyle=(0, (4, 2.5)), zorder=0))
 
-    fig.supxlabel("Macro-F1 contrast", x=0.525, y=0.005, fontsize=9.5, color=INK)
+    fig.supxlabel("Macro-F1 contrast", x=0.525, y=0.01, fontsize=9.5, color=INK)
 
     def frame_handle(col):
         return Rectangle((0, 0), 1, 1, fill=False, edgecolor=col, linewidth=1.0, linestyle=(0, (3, 2)))
 
     handles = [
-        frame_handle(TEAL), frame_handle(PURPLE),
+        frame_handle(TEAL),
         Line2D([0], [0], marker="o", linestyle="none", markersize=4.2, markerfacecolor="white",
                markeredgecolor="#555555", markeredgewidth=0.8),
         Line2D([0], [0], marker="D", linestyle="-", markersize=4.6, color="#555555",
                markerfacecolor="#555555", linewidth=1.6),
     ]
-    labels = ["Linear readout (primary)", "Centroid readout (secondary)",
-              "12 configuration estimates", "Mean, 95% class-index interval"]
-    fig.legend(handles, labels, loc="upper left", bbox_to_anchor=(0.005, 1.0), ncol=2,
+    labels = (["Linear readout (primary)", "12 configuration estimates",
+               "Mean, 95% class-index interval"] if LINEAR_ONLY else
+              ["Linear readout (primary)", "Centroid readout (secondary)",
+               "12 configuration estimates", "Mean, 95% class-index interval"])
+    fig.legend(handles, labels, loc="upper left", bbox_to_anchor=(0.005, 1.0),
+               ncol=3 if LINEAR_ONLY else 2,
                frameon=False, handlelength=1.6, handletextpad=0.45, columnspacing=1.1,
                borderaxespad=0.2)
     return fig
