@@ -1,4 +1,4 @@
-# Held-Out Song Types in Closed-Set Great Tit Identification: Decoders Do Not Close the Gap, Coverage Does
+# The Held-Out Song-Type Gap in Closed-Set Great Tit Identification Survives Four Decoders and Closes with Repertoire Coverage
 
 Supplementary material for the ICASSP 2027 paper by Song Dong (independent researcher, Hong Kong SAR, China).
 
